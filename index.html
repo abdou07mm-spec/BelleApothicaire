@@ -14,6 +14,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Italiana&family=Inter+Tight:wght@300;400;500;600;700&family=Caveat:wght@400;500&display=swap" rel="stylesheet">
 
+<!-- 3D & Animation libraries -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
+
 <style>
 /* =========================================================
    DESIGN TOKENS — Apothicaire Moderne × Édition Magazine
@@ -2785,6 +2791,212 @@ footer ul li a:hover { color: var(--gold-light); padding-left: 8px; }
   .checkout-modal .modal-dialog { margin: 0; max-width: 100%; }
   .checkout-modal .modal-content { min-height: 100vh; }
 }
+
+/* =============================================================
+   3D SCENE · GSAP ANIMATIONS · MICRO-INTERACTIONS
+   ============================================================= */
+
+/* --- Hero 3D Canvas --- */
+.hero {
+  background: #091810 !important;
+  min-height: 100vh !important;
+  padding: 100px 0 130px !important;
+}
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+}
+.hero .container { position: relative; z-index: 2; }
+.hero-text {
+  background: rgba(9, 24, 16, 0.45) !important;
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(176, 141, 87, 0.18) !important;
+  padding: 52px 46px !important;
+  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.5),
+              inset 0 1px 0 rgba(240, 232, 216, 0.06);
+}
+.hero h1 { color: var(--cream) !important; }
+.hero h1 em { color: #e8a5a5 !important; }
+.hero-lead { color: rgba(240, 232, 216, 0.80) !important; }
+.hero-script { color: var(--gold-light) !important; }
+.hero-eyebrow span { color: rgba(240, 232, 216, 0.60) !important; }
+.hero-eyebrow .line { background: var(--gold) !important; }
+.hero-img {
+  background: rgba(29, 59, 42, 0.15) !important;
+  border: 1px solid rgba(176, 141, 87, 0.12) !important;
+  backdrop-filter: blur(6px);
+}
+.float-card {
+  background: rgba(9, 24, 16, 0.72) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(176, 141, 87, 0.28) !important;
+}
+.float-card-num { color: var(--gold-light) !important; }
+.float-card-label { color: rgba(240, 232, 216, 0.65) !important; }
+.edition-badge {
+  background: rgba(168, 107, 98, 0.88) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(240, 232, 216, 0.15) !important;
+}
+.hero-image-wrap {
+  position: relative;
+}
+
+/* --- 3D Product cards (VanillaTilt) --- */
+.product-item {
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+.product-item .img-frame {
+  transition: box-shadow 0.5s cubic-bezier(0.2, 0, 0.2, 1) !important;
+}
+.product-item:hover .img-frame {
+  box-shadow: 0 50px 100px -20px rgba(29, 59, 42, 0.4),
+              0 20px 40px -15px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* --- Category cards enhanced 3D hover --- */
+.cat-card {
+  transition: transform 0.65s cubic-bezier(0.2, 0, 0.2, 1),
+              box-shadow 0.65s cubic-bezier(0.2, 0, 0.2, 1) !important;
+}
+.cat-card:hover {
+  transform: translateY(-12px) scale(1.025) !important;
+  box-shadow: 0 60px 120px -30px rgba(0, 0, 0, 0.45) !important;
+  z-index: 2;
+}
+.cat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(176, 141, 87, 0.12), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  z-index: 1;
+  pointer-events: none;
+}
+.cat-card:hover::before { opacity: 1; }
+
+/* --- Spotlight 3D perspective hover --- */
+.spotlight-img-wrap { perspective: 1400px; }
+.spotlight-img-wrap img {
+  transition: transform 1.1s cubic-bezier(0.2, 0, 0.2, 1) !important;
+}
+.spotlight:hover .spotlight-img-wrap img {
+  transform: rotateY(-7deg) rotateX(3deg) scale(1.04);
+}
+.spotlight-img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, rgba(176, 141, 87, 0.06), transparent 50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* --- Testimonial 3D cards --- */
+.test-card {
+  perspective: 900px;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.2, 0, 0.2, 1),
+              box-shadow 0.55s !important;
+}
+.test-card:hover {
+  transform: translateY(-12px) rotateX(3deg) !important;
+  box-shadow: 0 50px 100px -25px rgba(29, 59, 42, 0.28) !important;
+}
+
+/* --- Promo collage 3D hover --- */
+.promo-img-1, .promo-img-2 {
+  transition: transform 0.75s cubic-bezier(0.2, 0, 0.2, 1),
+              box-shadow 0.75s !important;
+}
+.promo-img-collage:hover .promo-img-1 {
+  transform: rotate(-2.5deg) scale(1.04) translateY(-6px);
+  box-shadow: 0 50px 100px -25px rgba(0, 0, 0, 0.38) !important;
+}
+.promo-img-collage:hover .promo-img-2 {
+  transform: rotate(2deg) scale(1.05) translate(10px, -10px);
+  box-shadow: 0 50px 100px -25px rgba(0, 0, 0, 0.38) !important;
+}
+
+/* --- Button shimmer sweep --- */
+.btn-ink { overflow: hidden; position: relative; }
+.btn-ink::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.btn-ink:hover::before { transform: translateX(120%); }
+
+/* --- Nav links magnetic --- */
+.navlink { transition: transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.3s !important; }
+
+/* --- Quote section parallax container --- */
+.quote-section { overflow: visible !important; perspective: 1000px; }
+.quote-text { will-change: transform; }
+
+/* --- Newsletter glow pulse --- */
+.newsletter-section::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(176, 141, 87, 0.07), transparent 70%);
+  pointer-events: none;
+  animation: glowPulse 7s ease-in-out infinite;
+  z-index: 0;
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.35); }
+}
+
+/* --- Spotlight badge rotating glow --- */
+.edition-badge::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(176, 141, 87, 0.4), transparent 60%, rgba(176, 141, 87, 0.4));
+  animation: spin 8s linear infinite;
+  z-index: -1;
+}
+
+/* --- 3D depth text shadows --- */
+.section-title { text-shadow: 0 6px 24px rgba(29, 59, 42, 0.08); }
+.section-title em { text-shadow: 0 6px 24px rgba(168, 107, 98, 0.14); }
+
+/* --- Brand names hover --- */
+.brand-name-edit {
+  display: inline-flex;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.brand-name-edit:hover { transform: scale(1.06) translateY(-5px); opacity: 0.75; }
+
+/* --- Filter pill active ring --- */
+.filter-pill.active {
+  box-shadow: 0 0 0 3px rgba(29, 59, 42, 0.15);
+}
+
+/* --- Smooth scrollbar aesthetic --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: rgba(29, 59, 42, 0.35); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--forest); }
 </style>
 </head>
 <body>
@@ -2835,6 +3047,7 @@ footer ul li a:hover { color: var(--gold-light); padding-left: 8px; }
      HERO
      ========================================================= -->
 <section class="hero">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
   <div class="container hero-shell">
     <div class="hero-text reveal">
       <div class="hero-eyebrow"><div class="line"></div><span>Édition № 12 — Printemps 2026</span></div>
@@ -4908,6 +5121,300 @@ function observeReveal() {
   }, { threshold: 0.1, rootMargin: '0px 0px -80px 0px' });
   els.forEach(el => obs.observe(el));
 }
+
+/* ================================================================
+   THREE.JS — Immersive 3D Hero Scene
+   ================================================================ */
+(function initHeroScene() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas || typeof THREE === 'undefined') return;
+
+  const hero = canvas.parentElement;
+  const W = () => hero.offsetWidth;
+  const H = () => hero.offsetHeight;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x091810);
+  scene.fog = new THREE.FogExp2(0x091810, 0.04);
+
+  const camera = new THREE.PerspectiveCamera(60, W() / H(), 0.1, 120);
+  camera.position.set(0, 0, 9);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+  renderer.setSize(W(), H());
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  /* Lighting */
+  scene.add(new THREE.AmbientLight(0x1a3a28, 2.5));
+  const goldLight = new THREE.PointLight(0xb08d57, 10, 22);
+  goldLight.position.set(4, 5, 6);
+  scene.add(goldLight);
+  const roseLight = new THREE.PointLight(0xc89289, 5, 16);
+  roseLight.position.set(-5, -2, 5);
+  scene.add(roseLight);
+  const rimLight = new THREE.PointLight(0xf0e8d8, 2.5, 12);
+  rimLight.position.set(0, 9, 2);
+  scene.add(rimLight);
+
+  /* Floating geometry shapes */
+  const shapes = [];
+  const defs = [
+    { G: new THREE.IcosahedronGeometry(1.25, 0),    col: 0xb08d57, wire: true,  op: 0.9,  x:  3.5, y:  1.8, z: -2,   rx:  0.003, ry:  0.006 },
+    { G: new THREE.IcosahedronGeometry(0.70, 1),    col: 0xf0e8d8, wire: false, op: 0.06, x: -4.2, y: -0.8, z: -4,   rx: -0.004, ry:  0.003 },
+    { G: new THREE.TorusGeometry(1.05, 0.26, 10, 32), col: 0xc89289, wire: false, op: 0.16, x:  2.2, y: -2.8, z: -1.5, rx:  0.005, ry: -0.004 },
+    { G: new THREE.OctahedronGeometry(0.95, 0),     col: 0xd4b888, wire: true,  op: 0.65, x: -3.2, y:  2.8, z: -2.5, rx:  0.002, ry:  0.008 },
+    { G: new THREE.IcosahedronGeometry(0.48, 0),    col: 0xb08d57, wire: true,  op: 0.85, x:  5.2, y: -0.8, z:  0.5, rx: -0.005, ry:  0.004 },
+    { G: new THREE.TorusGeometry(0.65, 0.18, 8, 24), col: 0xf0e8d8, wire: true,  op: 0.38, x: -5.5, y:  0.4, z: -5,   rx:  0.006, ry: -0.003 },
+    { G: new THREE.DodecahedronGeometry(0.68, 0),   col: 0xc89289, wire: true,  op: 0.50, x:  0.8, y:  3.4, z: -3.5, rx:  0.004, ry:  0.002 },
+    { G: new THREE.IcosahedronGeometry(0.38, 0),    col: 0xd4b888, wire: false, op: 0.10, x: -1.8, y: -3.2, z: -1.5, rx: -0.003, ry: -0.005 },
+    { G: new THREE.TorusGeometry(0.45, 0.12, 6, 18), col: 0xb08d57, wire: true,  op: 0.45, x: -2.8, y:  1.2, z:  1,   rx:  0.007, ry:  0.003 },
+    { G: new THREE.IcosahedronGeometry(0.58, 0),    col: 0xf0e8d8, wire: true,  op: 0.30, x:  4.8, y:  3.0, z: -4,   rx: -0.002, ry:  0.006 },
+  ];
+  defs.forEach(d => {
+    const mat = new THREE.MeshPhongMaterial({ color: d.col, wireframe: d.wire, opacity: d.op, transparent: d.op < 1 });
+    const mesh = new THREE.Mesh(d.G, mat);
+    mesh.position.set(d.x, d.y, d.z);
+    mesh.userData = { rx: d.rx, ry: d.ry, ox: d.x, oy: d.y };
+    scene.add(mesh);
+    shapes.push(mesh);
+  });
+
+  /* Particle field */
+  const N = 2200;
+  const pos = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    pos[i*3]   = (Math.random() - 0.5) * 36;
+    pos[i*3+1] = (Math.random() - 0.5) * 22;
+    pos[i*3+2] = (Math.random() - 0.5) * 22 - 5;
+  }
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const pMat = new THREE.PointsMaterial({ color: 0xb08d57, size: 0.038, sizeAttenuation: true, transparent: true, opacity: 0.48 });
+  const particles = new THREE.Points(pGeo, pMat);
+  scene.add(particles);
+
+  /* Second layer — rose particles */
+  const pos2 = new Float32Array(800 * 3);
+  for (let i = 0; i < 800; i++) {
+    pos2[i*3]   = (Math.random() - 0.5) * 28;
+    pos2[i*3+1] = (Math.random() - 0.5) * 18;
+    pos2[i*3+2] = (Math.random() - 0.5) * 14 - 3;
+  }
+  const pGeo2 = new THREE.BufferGeometry();
+  pGeo2.setAttribute('position', new THREE.BufferAttribute(pos2, 3));
+  const pMat2 = new THREE.PointsMaterial({ color: 0xc89289, size: 0.025, sizeAttenuation: true, transparent: true, opacity: 0.30 });
+  scene.add(new THREE.Points(pGeo2, pMat2));
+
+  /* Mouse parallax */
+  let mx = 0, my = 0, tx = 0, ty = 0;
+  document.addEventListener('mousemove', e => {
+    mx = (e.clientX / window.innerWidth  - 0.5) * 2.2;
+    my = (e.clientY / window.innerHeight - 0.5) * 1.6;
+  });
+
+  /* Resize */
+  const onResize = () => {
+    camera.aspect = W() / H();
+    camera.updateProjectionMatrix();
+    renderer.setSize(W(), H());
+  };
+  window.addEventListener('resize', onResize);
+
+  /* Animation */
+  const clock = new THREE.Clock();
+  let frameId, running = true;
+
+  function animate() {
+    if (!running) return;
+    frameId = requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    tx += (mx * 0.65 - tx) * 0.04;
+    ty += (-my * 0.45 - ty) * 0.04;
+    camera.position.x = tx;
+    camera.position.y = ty;
+    camera.lookAt(0, 0, 0);
+
+    shapes.forEach((m, i) => {
+      m.rotation.x += m.userData.rx + Math.sin(t * 0.28 + i) * 0.0008;
+      m.rotation.y += m.userData.ry + Math.cos(t * 0.22 + i) * 0.0008;
+      m.position.y = m.userData.oy + Math.sin(t * 0.38 + i * 1.3) * 0.12;
+    });
+
+    particles.rotation.y = t * 0.014;
+    particles.rotation.x = t * 0.005;
+
+    goldLight.position.x = Math.sin(t * 0.48) * 5.5;
+    goldLight.position.y = Math.cos(t * 0.32) * 4.5 + 2;
+    roseLight.position.x = Math.cos(t * 0.38) * -5.5;
+    roseLight.position.y = Math.sin(t * 0.55) * 3.5 - 1;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  /* Pause when hero leaves viewport */
+  new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) { running = true; animate(); }
+    else { running = false; cancelAnimationFrame(frameId); }
+  }, { threshold: 0.05 }).observe(hero);
+})();
+
+/* ================================================================
+   GSAP SCROLL ANIMATIONS
+   ================================================================ */
+(function initGSAP() {
+  if (typeof gsap === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* Hero entrance */
+  gsap.set('.hero-text', { opacity: 0, y: 55 });
+  gsap.set('.hero-image-wrap', { opacity: 0, y: 35 });
+  gsap.to('.hero-text',     { opacity: 1, y: 0, duration: 1.3, ease: 'power3.out', delay: 0.5 });
+  gsap.to('.hero-image-wrap', { opacity: 1, y: 0, duration: 1.3, ease: 'power3.out', delay: 0.8 });
+
+  /* Category cards stagger */
+  ScrollTrigger.create({
+    trigger: '.categories-section',
+    start: 'top 78%',
+    once: true,
+    onEnter() {
+      gsap.fromTo('.cat-card',
+        { y: 70, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.0, ease: 'power3.out', stagger: 0.1, clearProps: 'all' }
+      );
+    }
+  });
+
+  /* Spotlight 3D reveal */
+  ScrollTrigger.create({
+    trigger: '.spotlight',
+    start: 'top 72%',
+    once: true,
+    onEnter() {
+      gsap.fromTo('.spotlight-img-wrap', { x: -70, opacity: 0, rotationY: 18 },
+        { x: 0, opacity: 1, rotationY: 0, duration: 1.4, ease: 'power3.out', clearProps: 'all' });
+      gsap.fromTo('.spotlight-text', { x: 70, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1.4, ease: 'power3.out', delay: 0.18, clearProps: 'all' });
+    }
+  });
+
+  /* Quote parallax scrub */
+  gsap.fromTo('.quote-text',
+    { y: 35 },
+    {
+      y: -35,
+      ease: 'none',
+      scrollTrigger: { trigger: '.quote-section', start: 'top bottom', end: 'bottom top', scrub: 1.8 }
+    }
+  );
+
+  /* Quote mark elastic entrance */
+  ScrollTrigger.create({
+    trigger: '.quote-section',
+    start: 'top 72%',
+    once: true,
+    onEnter() {
+      gsap.fromTo('.quote-mark',
+        { scale: 0.4, opacity: 0, rotation: -22 },
+        { scale: 1, opacity: 1, rotation: 0, duration: 1.3, ease: 'elastic.out(1, 0.55)', clearProps: 'all' }
+      );
+      gsap.fromTo('.quote-text',
+        { opacity: 0 },
+        { opacity: 1, duration: 1.0, ease: 'power2.out', delay: 0.25, clearProps: 'opacity' }
+      );
+    }
+  });
+
+  /* Promo number 3D entrance */
+  ScrollTrigger.create({
+    trigger: '.promo-luxury',
+    start: 'top 72%',
+    once: true,
+    onEnter() {
+      gsap.fromTo('.promo-text-num',
+        { scale: 0.65, opacity: 0, skewX: 12 },
+        { scale: 1, opacity: 1, skewX: 0, duration: 1.3, ease: 'back.out(1.8)', clearProps: 'all' }
+      );
+    }
+  });
+
+  /* Testimonial cards stagger */
+  ScrollTrigger.create({
+    trigger: '.test-grid',
+    start: 'top 76%',
+    once: true,
+    onEnter() {
+      gsap.fromTo('.test-card',
+        { y: 55, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.14, clearProps: 'all' }
+      );
+    }
+  });
+
+  /* Section titles slide up */
+  document.querySelectorAll('.section-title').forEach(el => {
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 88%',
+      once: true,
+      onEnter() {
+        gsap.fromTo(el,
+          { y: 32, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', clearProps: 'all' }
+        );
+      }
+    });
+  });
+
+  /* Philosophy marquee speed on scroll velocity */
+  ScrollTrigger.create({
+    trigger: '.philosophy',
+    start: 'top bottom',
+    end: 'bottom top',
+    onUpdate(self) {
+      const spd = Math.max(20, 60 - Math.abs(self.getVelocity()) / 35);
+      const track = document.querySelector('.philosophy-track');
+      if (track) track.style.animationDuration = spd + 's';
+    }
+  });
+
+  /* Nav shrink on scroll */
+  ScrollTrigger.create({
+    start: 'top -80px',
+    end: 99999,
+    toggleClass: { className: 'topnav--scrolled', targets: '.topnav' }
+  });
+})();
+
+/* ================================================================
+   VANILLA TILT — 3D card perspective
+   ================================================================ */
+(function initTilt() {
+  if (typeof VanillaTilt === 'undefined') return;
+
+  function applyTilt(scope) {
+    const items = (scope || document).querySelectorAll('.product-item:not([data-tilt])');
+    if (items.length) {
+      VanillaTilt.init(items, {
+        max: 10, speed: 600, glare: true, 'max-glare': 0.16,
+        scale: 1.028, perspective: 900,
+        easing: 'cubic-bezier(.03,.98,.52,.99)',
+      });
+    }
+    const cards = (scope || document).querySelectorAll('.test-card:not([data-tilt])');
+    if (cards.length) {
+      VanillaTilt.init(cards, { max: 5, speed: 500, glare: false, scale: 1.01, perspective: 1100 });
+    }
+  }
+
+  applyTilt();
+
+  /* Re-apply when product grid is re-rendered */
+  const grid = document.getElementById('productsGrid');
+  if (grid) new MutationObserver(() => applyTilt(grid)).observe(grid, { childList: true });
+})();
 </script>
 </body>
 </html>
